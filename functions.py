@@ -109,3 +109,38 @@ def double_exp_fit(TRPL, t, tau1_bounds=(0,1000*1e-9), a1_bounds=(0,1), tau2_bou
     avg_tau = avg_tau_from_double_exp(tau1, a1, tau2, a2)
     
     return tau1, a1, tau2, a2, avg_tau, PL_fit, noise
+
+def single_exp_fit(TRPL, t, tau_bounds=(0,1000*1e-9), a_bounds=(0,1), noise=(0,1)):
+
+    def single_exp(t, tau, a, noise):
+        return (a * np.exp(-((1.0 / tau)*t) ) + noise)
+    
+    def Diff_Ev_Fit_SiE(TRPL):
+        
+        def residuals(params):#params are the parameters to be adjusted by differential evolution or leastsq, interp is the data to compare to the model.
+            #Variable Rates
+            tau = params[0]
+            a = params[1]
+            noise = params[2]
+            
+            PL_sim = single_exp(t,tau, a, noise)
+    
+            Resid= (np.sum(((PL_sim-TRPL)**2)/(np.sqrt(PL_sim)**2)))
+            return Resid #returns the difference between the PL data and simulated data
+        
+        bounds = [tau_bounds, a_bounds, noise] 
+    
+        result = differential_evolution(residuals, bounds)
+        return result.x
+    
+    p = Diff_Ev_Fit_DE(TRPL)
+
+    tau = p[0]
+    a = p[1]
+    noise = p[2]
+    
+    PL_fit = single_exp(t, tau, a, noise)
+    
+    return tau, a, PL_fit, noise
+
+    
