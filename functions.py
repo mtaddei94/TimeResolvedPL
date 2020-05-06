@@ -133,7 +133,7 @@ def single_exp_fit(TRPL, t, tau_bounds=(0,1000*1e-9), a_bounds=(0,1), noise=(0,1
         result = differential_evolution(residuals, bounds)
         return result.x
     
-    p = Diff_Ev_Fit_DE(TRPL)
+    p = Diff_Ev_Fit_SiE(TRPL)
 
     tau = p[0]
     a = p[1]
