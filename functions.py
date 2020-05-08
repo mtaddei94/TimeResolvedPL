@@ -110,10 +110,10 @@ def double_exp_fit(TRPL, t, tau1_bounds=(0,1000*1e-9), a1_bounds=(0,1), tau2_bou
     
     return tau1, a1, tau2, a2, avg_tau, PL_fit, noise
 
-def single_exp_fit(TRPL, t, tau_bounds=(0,1000*1e-9), a_bounds=(0,1), noise=(0,1)):
+def single_exp_fit(TRPL, t, tau_bounds=(0,10000*1e-9), a_bounds=(0,1), noise=(0,1)):
 
     def single_exp(t, tau, a, noise):
-        return (a * np.exp(-((1.0 / tau)*t) ) + noise)
+        return (a * np.exp(-((1.0 / tau)*t)) + noise)
     
     def avg_tau_from_single_exp(tau, a):
         return ((tau*a)/(a))
@@ -125,6 +125,7 @@ def single_exp_fit(TRPL, t, tau_bounds=(0,1000*1e-9), a_bounds=(0,1), noise=(0,1
             tau = params[0]
             a = params[1]
             noise = params[2]
+            
             
             PL_sim = single_exp(t,tau, a, noise)
     
@@ -141,6 +142,7 @@ def single_exp_fit(TRPL, t, tau_bounds=(0,1000*1e-9), a_bounds=(0,1), noise=(0,1
     tau = p[0]
     a = p[1]
     noise = p[2]
+   
     
     PL_fit = single_exp(t, tau, a, noise)
     
