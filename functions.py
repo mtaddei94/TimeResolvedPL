@@ -150,4 +150,28 @@ def single_exp_fit(TRPL, t, tau_bounds=(0,10000*1e-9), a_bounds=(0,1)):
     
     return tau, a, avg_tau, PL_fit
 
+def calculate_surface_lifetime(effective_lifetime, bulk_lifetime=8000):
+    """Calculate surface lifetime for a semiconductor given effective lifetime and bulk lifetime
+    
+    effective_lifetime : preferably in nanoseconds, units can be different from nanoseconds but bulk_lifetime must be modified accordingly 
+    bulk_lifetime : 8000, in nanoseconds, can be modified 
+    """
+    surface_lifetime = (effective_lifetime * bulk_lifetime)/(bulk_lifetime - effective_lifetime)
+    return surface_lifetime
+        
+def calculate_srv (surface_lifetime, diffusion_coefficient = 0.9, thickness = 400):
+    """
+    Calculate SRV for two different conditions (SRV1=0 and SRV1=SRV2) given surface lifetime (in ns), diffusion coefficient (in cm2/s) and thickness (in nm)
+    
+    Returns : SRV for SRV1=0 condition, SRV for SRV1=SRV2 condition
+    """
+    
+    thickness = thickness*1e-7 # convert to cm
+    diffusion_coefficient = diffusion_coefficient # in cm2/s
+
+    srv1_srv2_equal = thickness / (2*((1e-9*surface_lifetime) - ((1/diffusion_coefficient)*((thickness/np.pi)**2)) ))
+    srv1_zero = thickness / ((1e-9*surface_lifetime) - ((4/diffusion_coefficient)*((thickness/np.pi)**2)) )
+
+    return srv1_zero, srv1_srv2_equal
+
     
